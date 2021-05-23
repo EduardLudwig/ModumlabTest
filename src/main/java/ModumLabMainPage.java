@@ -8,10 +8,10 @@ import org.openqa.selenium.WebDriver;
  * @author E. Ludwig
  *
  */
-public class ModumLabHomePage {
+public class ModumLabMainPage {
     private WebDriver driver;
 
-    public ModumLabHomePage(WebDriver driver) {
+    public ModumLabMainPage(WebDriver driver) {
         this.driver = driver;
     }
 
