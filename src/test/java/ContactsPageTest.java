@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,7 +25,6 @@ public class ContactsPageTest {
         driver.get("https://modumlab.com/contacts#spb");
         contactsPage = new ContactsPage(driver);
         modumLabMainPage = new ModumLabMainPage(driver);
-
     }
 
     /**
@@ -33,7 +34,7 @@ public class ContactsPageTest {
     public void checkCallbackWindow() {
         modumLabMainPage.clickNotificationClose();
         contactsPage.clickCallbackButton();
-        contactsPage.checkElement(contactsPage.getCallbackWindow());
+        contactsPage.checkCallbackWindow();
     }
 
     /**
@@ -43,10 +44,10 @@ public class ContactsPageTest {
     public void checkCloseCallbackForm(){
         modumLabMainPage.clickNotificationClose();
         contactsPage.clickCallbackButton();
-        Assert.assertTrue(contactsPage.checkElement(contactsPage.getCallbackWindow()));
-        Assert.assertFalse(contactsPage.isExistCallbackWindow(contactsPage.getNonExists()));
-        contactsPage.closeCallbackWindow();
-        Assert.assertFalse(contactsPage.checkElement(contactsPage.getCallbackWindow()));
+        Assert.assertTrue(contactsPage.checkCallbackWindow());
+        contactsPage.clickOtherPosition(0, driver.manage().window().getSize().getHeight()/2);
+        Assert.assertTrue(contactsPage.isExistCallbackWindow());
+        Assert.assertFalse(contactsPage.checkCallbackWindow());
     }
 
     /**
