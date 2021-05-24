@@ -1,11 +1,10 @@
+import conf.ConfProperties;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.interactions.Actions;
-
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,13 +15,18 @@ public class ContactsPageTest {
     private ContactsPage contactsPage;
     private ModumLabMainPage modumLabMainPage;
 
+    private final String phoneNumberTextOne = "abc!@#";
+    private final String phoneNumberTextTwo = "12345";
+    private final String phoneNumberTextThree = "67890";
+    private final String phoneNumberTextResult = phoneNumberTextTwo + phoneNumberTextThree;
+
     @Before
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\pixifixi\\Downloads\\chromedriver\\chromedriver.exe");
+        System.setProperty(ConfProperties.getProperty("driver"), ConfProperties.getProperty("driverpath"));
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.manage().window().maximize();
-        driver.get("https://modumlab.com/contacts#spb");
+        driver.get(ConfProperties.getProperty("contactspage"));
         contactsPage = new ContactsPage(driver);
         modumLabMainPage = new ModumLabMainPage(driver);
     }
@@ -51,17 +55,48 @@ public class ContactsPageTest {
     }
 
     /**
-     *
+     *  Тест для проверки поля "номер телефона", что ввод любых данных кроме цифр недоступен. Проверяем, что
+     *  сможем ввести все 10цифр телефона, поставив буквы и символы в начале
      */
     @Test
-    public void checkInputPhoneNumber() {
+    public void checkInputPhoneNumberStart() {
         modumLabMainPage.clickNotificationClose();
         contactsPage.clickCallbackButton();
-        contactsPage.sendNumberField("123!#*asd");
+        contactsPage.sendNumberField(phoneNumberTextOne + phoneNumberTextTwo + phoneNumberTextThree);
         String numberField = contactsPage.getNumberField();
         numberField = numberField.substring(4).replace(")","")
-                .replace(" ","");
-        Assert.assertEquals(numberField,"123");
+                .replace(" ","").replace("-","");
+        Assert.assertEquals(numberField, phoneNumberTextResult);
+    }
+
+    /**
+     *  Тест для проверки поля "номер телефона", что ввод любых данных кроме цифр недоступен. Проверяем, что
+     *  сможем ввести все 10цифр телефона, поставив буквы и символы в середине
+     */
+    @Test
+    public void checkInputPhoneNumberMiddle() {
+        modumLabMainPage.clickNotificationClose();
+        contactsPage.clickCallbackButton();
+        contactsPage.sendNumberField(phoneNumberTextTwo + phoneNumberTextOne + phoneNumberTextThree);
+        String numberField = contactsPage.getNumberField();
+        numberField = numberField.substring(4).replace(")","")
+                .replace(" ","").replace("-","");
+        Assert.assertEquals(numberField,phoneNumberTextResult);
+    }
+
+    /**
+     *  Тест для проверки поля "номер телефона", что ввод любых данных кроме цифр недоступен. Проверяем, что
+     *  сможем ввести все 10цифр телефона, поставив буквы и символы в конце
+     */
+    @Test
+    public void checkInputPhoneNumberEnd() {
+        modumLabMainPage.clickNotificationClose();
+        contactsPage.clickCallbackButton();
+        contactsPage.sendNumberField(phoneNumberTextTwo + phoneNumberTextThree + phoneNumberTextOne);
+        String numberField = contactsPage.getNumberField();
+        numberField = numberField.substring(4).replace(")","")
+                .replace(" ","").replace("-","");
+        Assert.assertEquals(numberField,phoneNumberTextResult);
     }
 
     @After

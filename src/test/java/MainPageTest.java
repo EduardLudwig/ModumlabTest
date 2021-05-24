@@ -1,3 +1,4 @@
+import conf.ConfProperties;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,11 +17,11 @@ public class MainPageTest {
 
     @Before
     public void setUp(){
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\pixifixi\\Downloads\\chromedriver\\chromedriver.exe");
+        System.setProperty(ConfProperties.getProperty("driver"), ConfProperties.getProperty("driverpath"));
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
         driver.manage().window().maximize();
-        driver.get("http://modumlab.com");
+        driver.get(ConfProperties.getProperty("mainpage"));
         modumLabMainPage = new ModumLabMainPage(driver);
     }
 
@@ -61,7 +62,6 @@ public class MainPageTest {
         modumLabMainPage.isDisplayedCookieNotification();
         modumLabMainPage.clickNotificationClose();
         driver.navigate().refresh();
-
         Assert.assertFalse(modumLabMainPage.isDisplayedCookieNotification());
     }
 
